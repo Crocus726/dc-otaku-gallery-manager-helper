@@ -1,1 +1,1 @@
-# dc-otaku-gallery-manager-helper
+# 디시인사이드 덕질 갤러리 관리 도우미
