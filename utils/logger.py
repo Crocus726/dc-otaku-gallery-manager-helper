@@ -1,5 +1,7 @@
 import sys
 import os
+import atexit
+import traceback
 from datetime import datetime
 
 class TimeLogger:
@@ -7,6 +9,7 @@ class TimeLogger:
         self.terminal = sys.stdout
         self.log = open(filename, "a", encoding = "utf-8")
         self.is_new_line = True
+
     def write(self, message):
         if message == '\n':
             self.terminal.write(message)
@@ -22,13 +25,22 @@ class TimeLogger:
         self.terminal.write(message)
         self.log.write(message)
         self.log.flush()
+        
     def flush(self):
         pass
+
+def on_exit():
+    print("프로그램 종료")
 
 def setup_logger():
     if not os.path.exists("logs"):
         os.makedirs("logs")
     log_start_time = datetime.now().strftime("%Y%m%d_%H%M%S")
     log_filename = f"logs/log_{log_start_time}.txt"
-    sys.stdout = TimeLogger(log_filename)
+
+    logger = TimeLogger(log_filename)
+    sys.stdout = logger
+    sys.stderr = logger
+    atexit.register(on_exit)
+
     return log_filename
